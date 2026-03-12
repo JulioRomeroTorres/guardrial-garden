@@ -1,17 +1,16 @@
 
-from typing import Optional, List, Dict, Any, Tuple
+from typing import Optional, List, Dict, Any, Tuple, Optional
 from azure.ai.contentsafety.aio import ContentSafetyClient
-from azure.core.credentials import AzureKeyCredential
 from azure.ai.contentsafety.models import AnalyzeTextOptions, TextCategory, AnalyzeTextResult
-from app.domain.repository.content_safety_repository import IContentSafetyRepository
+from app.domain.repository.content_safety_repository import IContentSafetyRepository, SeverityScale
 from app.domain.contants import DecisionAction
 
 class ContentSafetyGuardilRepository(IContentSafetyRepository):
     def __init__(self, content_safety_client: ContentSafetyClient):
         self.content_safety_client = content_safety_client
     
-    async def analyze_text(self, text: str, blocklist_names: Optional[List[str]] = [] ) -> Any:
-        request = AnalyzeTextOptions(text=text, blocklist_names=blocklist_names)
+    async def analyze_text(self, text: str, blocklist_names: Optional[List[str]] = [], severity_scale: Optional[SeverityScale] = "FourSeverityLevels") -> Any:
+        request = AnalyzeTextOptions(text=text, blocklist_names=blocklist_names, output_type=severity_scale)
         response = await self.content_safety_client.analyze_text(request)
         return response
 

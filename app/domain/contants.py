@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Dict
+from typing import Dict, Literal
 
 DEFAULT_K_NEAREST_NEIGHBORS = 50
 DEFAULT_TOP_ITEMS = 5
@@ -41,3 +41,8 @@ MODEL_SUMMARIZE_VERSION: Dict[SummarizeModelAvailable, str] = {
 class OrderEnum(Enum):
     ASC = 1
     DESC = -1
+
+MAPPER_SEVERITY_SCALE: Dict[int, Literal["FourSeverityLevels","EightSeverityLevels"]] = {
+    4: "FourSeverityLevels",
+    8: "EightSeverityLevels"
+}

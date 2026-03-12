@@ -34,7 +34,7 @@ async def analyze_text_by_catalog_guardial(guardial_id: str, analzy_content_requ
     
     return JSONResponse(guardial_analysis_result.format_json(), headers={"status_code": "200"})
 
-@router.get("/custom-guardial/")
+@router.get("/custom-validation/")
 async def analyze_text_by_custom_guardial(custom_guardrial_request: CustomGuardrailRequest):
 
     handle_analyze_text = get_handle_analyze_text_use_case()

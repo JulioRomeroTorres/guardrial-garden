@@ -1,6 +1,8 @@
 from pydantic import BaseModel
 from app.domain.contants import DecisionAction
-from typing import Any, Optional, List, Any
+from typing import (
+    Any, Optional, List, Literal
+) 
 from app.domain.filter.paged_information import CommonFilterParams
 from app.domain.guardrails.core_information import GuardrailInformation
 from azure.ai.contentsafety.models import TextCategory
@@ -42,6 +44,7 @@ class TunningGuardrailsParameters(BaseModel):
 class CustomGuardrailRequest(BaseModel):
     message: str
     tunning_parameters: TunningGuardrailsParameters
+    severity_scale: Optional[Literal[4, 8]] = 4
 
 class AnalyzeContentRequest(BaseModel):
     message: str

@@ -1,6 +1,6 @@
 
-from pydantic import BaseModel, Field
-from typing import List, Dict, Optional
+from pydantic import BaseModel
+from typing import List, Dict, Optional, Literal
 from datetime import datetime
 
 class GuardialMetadata(BaseModel):
@@ -18,6 +18,7 @@ class GuardialMetadata(BaseModel):
         }
 
 class GuardialSettings(BaseModel):
+    severity_scale: Optional[Literal[4, 8]] = 4
     tuning_parameters: Dict[str, int]
 
 class CoreGuardrialInformation(BaseModel):

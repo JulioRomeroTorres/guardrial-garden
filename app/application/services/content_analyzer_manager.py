@@ -1,7 +1,7 @@
 from app.domain.contants import DecisionAction
 from typing import Dict, Any, List, Optional, Tuple
 from azure.ai.contentsafety.models import TextCategory
-from app.domain.repository.content_safety_repository import IContentSafetyRepository
+from app.domain.repository.content_safety_repository import IContentSafetyRepository, SeverityScale
 
 AnalysisResultType = Tuple[DecisionAction, List[TextCategory]]
 
@@ -12,7 +12,8 @@ class ContentAnalyzerManager:
     
     async def analyze_content(self, 
                               message: str, reject_thresholds: Dict[str, Any], 
-                              block_list: Optional[List[str]] = []) -> AnalysisResultType:
+                              block_list: Optional[List[str]] = [],
+                              severity_scale: Optional[SeverityScale] = "FourSeverityLevels") -> AnalysisResultType:
         
-        analisis_result = await self.content_safety_repository.analyze_text(message, block_list)
+        analisis_result = await self.content_safety_repository.analyze_text(message, block_list, severity_scale)
         return self.content_safety_repository.make_decision(analisis_result, reject_thresholds)
