@@ -19,7 +19,7 @@ from app.domain.exceptions import DomainException
 from pydantic import ValidationError
 from app.presentation.exception_handlers import api_exception_handler, domain_exception_handler, generic_exception_handler
 from app.presentation.exception_handlers import request_validation_exception_handler, validation_exception_handler
-from app.presentation.api.routes import checks, analyze_text, guardrials
+from app.presentation.api.routes import analyze_content, checks, guardrails
 
 def setup_logging():
     logging.basicConfig(
@@ -48,8 +48,8 @@ async def lifespan(app: FastAPI):
 def create_app():
     app = FastAPI(debug=False, lifespan=lifespan)
     
-    app.include_router(analyze_text.router)
-    app.include_router(guardrials.router)
+    app.include_router(analyze_content.router)
+    app.include_router(guardrails.router)
     app.include_router(checks.router)
     
     settings = get_settings()

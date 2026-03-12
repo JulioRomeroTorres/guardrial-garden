@@ -3,7 +3,7 @@ from functools import lru_cache
 from app.config import get_settings
 
 from app.application.use_cases.handle_guardrials_information import (
-    HandleGuardrialsUseCase
+    HandleGuardrailsUseCase
 )
 
 from app.application.use_cases.handle_analyze_text import (
@@ -11,7 +11,7 @@ from app.application.use_cases.handle_analyze_text import (
 )
 
 from app.application.services.content_analyzer_manager import ContentAnalyzerManager
-from app.application.services.guardrial_information_manager import GuardrialInforamationManager
+from app.application.services.guardrail_information_manager import GuardrailInformationManager
 
 from app.infrastructure.repository.mongo_db import MongoDbRepository
 from app.infrastructure.repository.content_safety import ContentSafetyGuardilRepository
@@ -36,10 +36,10 @@ class DependencyContainer:
 
         settings = get_settings()
         
-        self._factories["db_repository"] = lambda: MongoDbRepository(self._get_db_client(), settings.mongo_db_name)        
+        self._factories["db_repository"] = lambda: MongoDbRepository(self._get_db_client(), settings.mongo_db_name, "guardrail_information")        
         self._factories["content_safety_repository"] = lambda: ContentSafetyGuardilRepository(self._get_content_safety_client())
         
-        self._factories["guardial_information_manager"] = lambda: GuardrialInforamationManager(
+        self._factories["guardrail_information_manager"] = lambda: GuardrailInformationManager(
             self.get('db_repository')
         )
 
@@ -59,14 +59,14 @@ class DependencyContainer:
 
         return self._instances[service_name]
 
-    def get_handle_guardials_use_case(self) -> HandleGuardrialsUseCase:
-        return HandleGuardrialsUseCase(
-            guardial_information_manager=self.get("guardial_information_manager")
+    def get_handle_guardrails_use_case(self) -> HandleGuardrailsUseCase:
+        return HandleGuardrailsUseCase(
+            guardrail_information_manager=self.get("guardrail_information_manager")
         )
 
     def get_handle_analyze_text_use_case(self) -> HandleAnalyzeTextUseCase:
           return HandleAnalyzeTextUseCase(
-            guardial_information_manager=self.get("guardial_information_manager"),
+            guardrail_information_manager=self.get("guardrail_information_manager"),
             content_analyzer_manager=self.get("content_analyzer_manager"),
         )
 

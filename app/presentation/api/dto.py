@@ -1,29 +1,47 @@
 from pydantic import BaseModel
+from app.domain.contants import DecisionAction
 from typing import Any, Optional, List, Any
 from app.domain.filter.paged_information import CommonFilterParams
-from app.domain.guardrials.core_information import GuardrialInformation
+from app.domain.guardrails.core_information import GuardrailInformation
+from azure.ai.contentsafety.models import TextCategory
 
-class GuardrialsCatalogFilters(CommonFilterParams):
+class GuardrailsCatalogFilters(CommonFilterParams):
     pass
 
-class PagedGuardrialsResponse(CommonFilterParams):
+class PagedGuardrailsResponse(CommonFilterParams):
     guardials: List[Any]
 
-class GuardrialInformationResponse(GuardrialInformation):
+class GuardrailInformationResponse(GuardrailInformation):
     pass
 
-class GuardrialAnalysisResponse(BaseModel):
-    is_approved: bool
+class GuardrailAnalysisResponse(BaseModel):
+    is_approved: DecisionAction
     result: Any
 
-class TunningGuardrialsParameters:
+    def format_json(self):
+        return {
+            **self.model_dump(),
+            "is_approved": ( self.is_approved.value == DecisionAction.ACCEPT.value ),
+        } 
+
+class TunningGuardrailsParameters(BaseModel):
     hate: int
     self_harm: int
     sexual: int
     violence: int
     prompt: Optional[str] = None
 
-class CustomGuardrialRequest(BaseModel):
+    def format_json(self):
+        return {
+            "Hate": self.hate,
+            "SelfHarm": self.self_harm,
+            "Violence": self.violence,
+            "Sexual": self.sexual
+        }
+
+class CustomGuardrailRequest(BaseModel):
     message: str
-    tunning_parameters: TunningGuardrialsParameters
-    
+    tunning_parameters: TunningGuardrailsParameters
+
+class AnalyzeContentRequest(BaseModel):
+    message: str

@@ -33,6 +33,7 @@ class MongoDbRepository(IItemSqlRepository):
 
     async def get_paged_items(self, page: int, page_size: int, sort_key: str, sort_order: Optional[int] = -1, collection_name: Optional[str] = None) -> List[JsonType]:
         skip_count = (page - 1) * page_size
+        print("jajaja", skip_count, page_size, sort_key)
         collection = self._create_collection_reference(collection_name)
         return await collection.find().sort(sort_key, sort_order).skip(skip_count).limit(page_size).to_list(page_size)
     

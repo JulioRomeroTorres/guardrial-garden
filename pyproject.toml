@@ -1,5 +1,5 @@
 [project]
-name = "guardial-garden"
+name = "guardrail-garden"
 version = "1.0.0"
 description = "Guardil CRUD Repository"
 readme = "README.md"
@@ -19,7 +19,8 @@ dependencies = [
     "azure-ai-contentsafety==1.0.0",
     "azure-ai-textanalytics==5.2.0",
     "pymongo==4.16.0",
-    "python-multipart==0.0.22"
+    "python-multipart==0.0.22",
+    "aiohttp==3.13.3"
 ]
 
 [project.optional-dependencies]
