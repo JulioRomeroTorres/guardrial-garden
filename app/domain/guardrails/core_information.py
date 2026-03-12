@@ -1,7 +1,9 @@
 
 from pydantic import BaseModel
-from typing import List, Dict, Optional, Literal
+from typing import List, Dict, Optional, Literal, Any
 from datetime import datetime
+
+LiteralGuardrailModes = Literal["user_input", "agent_output", "pre_tool", "post_tool"]
 
 class GuardialMetadata(BaseModel):
     created_by: str
@@ -19,6 +21,7 @@ class GuardialMetadata(BaseModel):
 
 class GuardialSettings(BaseModel):
     severity_scale: Optional[Literal[4, 8]] = 4
+    modes: Optional[List[LiteralGuardrailModes]] = ["user_input"]
     tuning_parameters: Dict[str, int]
 
 class CoreGuardrialInformation(BaseModel):

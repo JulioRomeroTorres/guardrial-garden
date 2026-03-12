@@ -1,9 +1,8 @@
 from app.domain.contants import DecisionAction
 from typing import Dict, Any, List, Optional, Tuple
-from azure.ai.contentsafety.models import TextCategory
 from app.domain.repository.content_safety_repository import IContentSafetyRepository, SeverityScale
 
-AnalysisResultType = Tuple[DecisionAction, List[TextCategory]]
+AnalysisResultType = Tuple[DecisionAction, Dict[Any, str]]
 
 class ContentAnalyzerManager:
     def __init__(self, content_safety_repository: IContentSafetyRepository):

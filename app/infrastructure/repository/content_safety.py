@@ -14,7 +14,7 @@ class ContentSafetyGuardilRepository(IContentSafetyRepository):
         response = await self.content_safety_client.analyze_text(request)
         return response
 
-    def valide_categories(self, response: AnalyzeTextResult, reject_thresholds: Dict[Any, int]) -> Tuple[bool, List[TextCategory]]:
+    def valide_categories(self, response: AnalyzeTextResult, reject_thresholds: Dict[Any, int]) -> Tuple[bool, Dict[Any, str]]:
         action_by_category = {}
         reject_decision = False
 
@@ -35,7 +35,7 @@ class ContentSafetyGuardilRepository(IContentSafetyRepository):
         return False
 
 
-    def make_decision(self, response: AnalyzeTextResult, reject_thresholds: Dict[Any, int]) -> Tuple[DecisionAction, List[TextCategory]]:
+    def make_decision(self, response: AnalyzeTextResult, reject_thresholds: Dict[Any, int]) -> Tuple[DecisionAction, Dict[Any, str]]:
         reject_by_decision, action_by_category = self.valide_categories(response, reject_thresholds)
         reject_by_blocklists = self.validate_blocklists(response)
 

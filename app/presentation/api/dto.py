@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from app.domain.contants import DecisionAction
 from typing import (
-    Any, Optional, List, Literal
+    Any, Optional, List, Literal, Dict
 ) 
 from app.domain.filter.paged_information import CommonFilterParams
 from app.domain.guardrails.core_information import GuardrailInformation
@@ -16,14 +16,28 @@ class PagedGuardrailsResponse(CommonFilterParams):
 class GuardrailInformationResponse(GuardrailInformation):
     pass
 
+MAPPER_CATEGORY_NAME = {
+    "Hate": "hate",
+    "SelfHarm": "self_harm",
+    "Sexual": "sexual",
+    "Violence": "violence"
+}
+
 class GuardrailAnalysisResponse(BaseModel):
-    is_approved: DecisionAction
-    result: Any
+    decision: DecisionAction
+    results: Dict[Any, str]
+    guardrail_name: Optional[str] = None
+    guardrail_id: Optional[str] = None
 
     def format_json(self):
         return {
-            **self.model_dump(),
-            "is_approved": ( self.is_approved.value == DecisionAction.ACCEPT.value ),
+            "result": { f"{MAPPER_CATEGORY_NAME[key]}": value for key, value in self.results.items() } ,
+            "guardrail_information": {
+                "id": self.guardrail_id,
+                "name": self.guardrail_name
+            }, 
+            "is_approved": ( self.decision.value == DecisionAction.ACCEPT.value ),
+            "is_by_pass": (( self.decision.value == DecisionAction.BY_PASS.value ))
         } 
 
 class TunningGuardrailsParameters(BaseModel):
@@ -48,3 +62,4 @@ class CustomGuardrailRequest(BaseModel):
 
 class AnalyzeContentRequest(BaseModel):
     message: str
+    mode: Optional[str] = "user_input"

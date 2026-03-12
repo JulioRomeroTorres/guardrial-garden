@@ -17,6 +17,7 @@ class GuardrailInformationManager:
             filters.limit,
             "metadata.created_at"
         )
+
         return [ CoreGuardrialInformation(**guardrial_information) for guardrial_information in guardrials_list ]
     
     async def get_specific_guardrail(self, guardial_id: str) -> GuardrailInformation:

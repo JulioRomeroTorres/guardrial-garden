@@ -7,6 +7,7 @@ DEFAULT_TOP_ITEMS = 5
 class DecisionAction(Enum):
     ACCEPT = "Accept"
     REJECT = "Reject"
+    BY_PASS = "ByPass"
 
 MEDIA_FILE_MAPPER = {
     'pdf': 'application/pdf',

@@ -1,7 +1,9 @@
 from typing import (
     Any, Dict, Optional, Literal
 )
+from app.domain.contants import DecisionAction
 from app.domain.contants import MAPPER_SEVERITY_SCALE
+from app.domain.guardrails.analysis import GuardrailAnalysisResult
 from app.application.services.guardrail_information_manager import GuardrailInformationManager
 from app.application.services.content_analyzer_manager import ContentAnalyzerManager, AnalysisResultType
 
@@ -21,9 +23,20 @@ class HandleAnalyzeTextUseCase:
             )
         return decision, results
 
-    async def analyze_content_by_guardial(self, message: str, guardial_id: str) -> AnalysisResultType:
+    async def analyze_content_by_guardial(self, message: str, guardial_id: str, mode: str) -> GuardrailAnalysisResult:
         guardrial_information = await self.guardrail_information_manager.get_specific_guardrail(guardial_id)
         tunnig_parameters_information = guardrial_information.settings
 
+        if mode not in tunnig_parameters_information.modes:
+            return GuardrailAnalysisResult(
+                decision=DecisionAction.BY_PASS,
+                name=guardrial_information.name
+            )
+
         decision, results = await self.analyze_content_by_parameters(message, tunnig_parameters_information.tuning_parameters, tunnig_parameters_information.severity_scale)
-        return decision, results
+
+        return GuardrailAnalysisResult(
+            decision=decision,
+            results=results,
+            name=guardrial_information.name
+        )

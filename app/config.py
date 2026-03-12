@@ -17,10 +17,7 @@ class Settings(BaseSettings):
     debug: bool = os.getenv("DEBUG", "false").lower() == "true"
 
     cors_origins: list[str] = [
-        "http://localhost:3000",
-        "http://localhost:3001",
-        "http://127.0.0.1:3000",
-        "http://20.14.210.156:3001"
+        "*"
     ]
     
     mongo_db_connection_string: Optional[str] = os.getenv("MONGO_DB_CONNECTION_STRING")

@@ -25,11 +25,13 @@ router = APIRouter(
 async def analyze_text_by_catalog_guardial(guardial_id: str, analzy_content_request: AnalyzeContentRequest):
 
     handle_analyze_text = get_handle_analyze_text_use_case()
-    decision, analysis_result = await handle_analyze_text.analyze_content_by_guardial(analzy_content_request.message, guardial_id)
+    guardrail_result = await handle_analyze_text.analyze_content_by_guardial(analzy_content_request.message, guardial_id, analzy_content_request.mode)
     
     guardial_analysis_result = GuardrailAnalysisResponse(
-        is_approved=decision,
-        result=analysis_result
+        decision=guardrail_result.decision,
+        results=guardrail_result.results,
+        guardrail_name=guardrail_result.name,
+        guardrail_id=guardial_id
     )
     
     return JSONResponse(guardial_analysis_result.format_json(), headers={"status_code": "200"})
@@ -41,7 +43,7 @@ async def analyze_text_by_custom_guardial(custom_guardrial_request: CustomGuardr
     decision, analysis_result = await handle_analyze_text.analyze_content_by_parameters(custom_guardrial_request.tunning_parameters.format_json())
 
     guardial_analysis_result = GuardrailAnalysisResponse(
-        is_approved=decision,
+        decision=decision,
         result=analysis_result
     )
     
