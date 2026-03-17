@@ -47,3 +47,10 @@ MAPPER_SEVERITY_SCALE: Dict[int, Literal["FourSeverityLevels","EightSeverityLeve
     4: "FourSeverityLevels",
     8: "EightSeverityLevels"
 }
+
+MAPPER_CATEGORY_NAME = {
+    "Hate": "hate",
+    "SelfHarm": "self_harm",
+    "Sexual": "sexual",
+    "Violence": "violence"
+}

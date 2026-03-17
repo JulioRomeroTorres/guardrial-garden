@@ -1,6 +1,7 @@
 from app.domain.contants import DecisionAction
 from typing import Dict, Any, List, Optional, Tuple
 from app.domain.repository.content_safety_repository import IContentSafetyRepository, SeverityScale
+from app.domain.contants import MAPPER_CATEGORY_NAME
 
 AnalysisResultType = Tuple[DecisionAction, Dict[Any, str]]
 
@@ -15,4 +16,11 @@ class ContentAnalyzerManager:
                               severity_scale: Optional[SeverityScale] = "FourSeverityLevels") -> AnalysisResultType:
         
         analisis_result = await self.content_safety_repository.analyze_text(message, block_list, severity_scale)
-        return self.content_safety_repository.make_decision(analisis_result, reject_thresholds)
+        decision, analysis = self.content_safety_repository.make_decision(analisis_result, reject_thresholds)
+        formatted_analysis = [ 
+            {
+                **analysis_value, 
+                "category_name": MAPPER_CATEGORY_NAME[analysis_value.get("category_name", None)]
+            } 
+            for analysis_value in analysis ] 
+        return decision, formatted_analysis

@@ -5,7 +5,7 @@ from typing import (
 ) 
 from app.domain.filter.paged_information import CommonFilterParams
 from app.domain.guardrails.core_information import GuardrailInformation
-from azure.ai.contentsafety.models import TextCategory
+from app.domain.repository.content_safety_repository import SeverityScale
 
 class GuardrailsCatalogFilters(CommonFilterParams):
     pass
@@ -16,28 +16,23 @@ class PagedGuardrailsResponse(CommonFilterParams):
 class GuardrailInformationResponse(GuardrailInformation):
     pass
 
-MAPPER_CATEGORY_NAME = {
-    "Hate": "hate",
-    "SelfHarm": "self_harm",
-    "Sexual": "sexual",
-    "Violence": "violence"
-}
-
 class GuardrailAnalysisResponse(BaseModel):
     decision: DecisionAction
-    results: Dict[Any, str]
+    analysis: List[Dict[str, Any]]
     guardrail_name: Optional[str] = None
     guardrail_id: Optional[str] = None
+    severity_scale: Optional[int] = 4
 
     def format_json(self):
         return {
-            "result": { f"{MAPPER_CATEGORY_NAME[key]}": value for key, value in self.results.items() } ,
+            "analysis": self.analysis,
             "guardrail_information": {
                 "id": self.guardrail_id,
                 "name": self.guardrail_name
             }, 
             "is_approved": ( self.decision.value == DecisionAction.ACCEPT.value ),
-            "is_by_pass": (( self.decision.value == DecisionAction.BY_PASS.value ))
+            "is_by_pass": (( self.decision.value == DecisionAction.BY_PASS.value )),
+            "severity_scale": self.severity_scale
         } 
 
 class TunningGuardrailsParameters(BaseModel):

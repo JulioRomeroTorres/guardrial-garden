@@ -38,5 +38,6 @@ class HandleAnalyzeTextUseCase:
         return GuardrailAnalysisResult(
             decision=decision,
             results=results,
-            name=guardrial_information.name
+            name=guardrial_information.name,
+            severity_scale=guardrial_information.settings.severity_scale
         )

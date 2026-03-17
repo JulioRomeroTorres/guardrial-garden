@@ -1,9 +1,9 @@
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 from pydantic import BaseModel
 from app.domain.contants import DecisionAction
-from azure.ai.contentsafety.models import TextCategory
 
 class GuardrailAnalysisResult(BaseModel):
     name: str
     decision: DecisionAction
-    results: Optional[Dict[Any, str]] = None
+    results: Optional[List[Dict[str, Any]]] = None
+    severity_scale: Optional[int] = 4

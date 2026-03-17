@@ -15,17 +15,26 @@ class ContentSafetyGuardilRepository(IContentSafetyRepository):
         return response
 
     def valide_categories(self, response: AnalyzeTextResult, reject_thresholds: Dict[Any, int]) -> Tuple[bool, Dict[Any, str]]:
-        action_by_category = {}
+        action_by_category = []
         reject_decision = False
 
         for category, threshold in reject_thresholds.items():
             cat_result = next((c for c in response.categories_analysis if c.category == category), None)
             
             if cat_result and cat_result.severity >= threshold:
-                action_by_category[category] = DecisionAction.REJECT.value
+                action_by_category.append({
+                    "category_name": category,
+                    "is_approve": False,
+                    "value": cat_result.severity
+                })
                 reject_decision = reject_decision or True
             else:
-                action_by_category[category] = DecisionAction.ACCEPT.value
+                action_by_category.append({
+                    "category_name": category,
+                    "is_approve": True,
+                    "value": cat_result.severity
+                })
+
 
         return reject_decision, action_by_category
     
